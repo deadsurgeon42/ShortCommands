@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
@@ -16,7 +14,7 @@ namespace ShortCommands
         public override string Name { get { return "ShortCommands"; } }
         public override string Author { get { return "Zaicon"; } }
         public override string Description { get { return "Enables live Shortcommands."; } }
-        public override Version Version { get { return new Version(1, 0, 0, 0); } }
+        public override Version Version { get { return new Version(1, 1, 0, 0); } }
 
         private static Config config = new Config();
         public string configPath = Path.Combine(TShock.SavePath, "ShortCommands.json");

@@ -1,7 +1,6 @@
 C:\Users\Clay\Documents\GitHub\ShortCommands\ShortCommands\obj\Debug\ShortCommands.csprojResolveAssemblyReference.cache
 C:\Users\Clay\Documents\GitHub\ShortCommands\ShortCommands\bin\Debug\ShortCommands.dll
 C:\Users\Clay\Documents\GitHub\ShortCommands\ShortCommands\bin\Debug\ShortCommands.pdb
-C:\Users\Clay\Documents\GitHub\ShortCommands\ShortCommands\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Clay\Documents\GitHub\ShortCommands\ShortCommands\bin\Debug\TerrariaServer.exe
 C:\Users\Clay\Documents\GitHub\ShortCommands\ShortCommands\bin\Debug\TShockAPI.dll
 C:\Users\Clay\Documents\GitHub\ShortCommands\ShortCommands\bin\Debug\MySql.Data.dll
