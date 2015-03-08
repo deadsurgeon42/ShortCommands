@@ -8,13 +8,13 @@ using TShockAPI;
 
 namespace ShortCommands
 {
-    [ApiVersion(1,16)]
+    [ApiVersion(1,17)]
     public class Shorten : TerrariaPlugin
     {
         public override string Name { get { return "ShortCommands"; } }
         public override string Author { get { return "Zaicon"; } }
         public override string Description { get { return "Enables live Shortcommands."; } }
-        public override Version Version { get { return new Version(1, 1, 0, 0); } }
+        public override Version Version { get { return new Version(1, 2, 0, 0); } }
 
         private static Config config = new Config();
         public string configPath = Path.Combine(TShock.SavePath, "ShortCommands.json");
@@ -50,6 +50,7 @@ namespace ShortCommands
 
         private void OnChat(TShockAPI.Hooks.PlayerCommandEventArgs args)
         {
+            /*
             bool exists = false;
 
             for (int i = 0; i < Commands.TShockCommands.Count; i++)
@@ -71,7 +72,7 @@ namespace ShortCommands
             }
 
             if (!exists)
-            {
+            {*/
                 if (config.shortcommands.ContainsKey(args.CommandName))
                 {
                     KeyValuePair<string, string> shortcmd = new KeyValuePair<string,string>();
@@ -84,6 +85,23 @@ namespace ShortCommands
                     }
 
                     string usecmd = shortcmd.Value;
+                    string usecmdname = usecmd.Split(' ')[0];
+
+                    if (Commands.TShockCommands.Count(p => p.Name == usecmdname) == 0 && Commands.ChatCommands.Count(p => p.Name == usecmdname) == 0)
+                    {
+                        args.Player.SendErrorMessage("Unknown command: {0}", usecmdname);
+                        args.Handled = true;
+                        return;
+                    }
+
+                    if (args.CommandName == usecmdname)
+                    {
+                        args.Player.SendErrorMessage("An error occured. Check the logs for more details.");
+                        TShock.Log.Error("\"{0}\" cannot be a shortcommand for \"{0}\"!", usecmdname);
+                        args.Handled = true;
+                        return;
+                    }
+
                     List<string> param = args.Parameters;
                     int replaced = 0;
 
@@ -110,11 +128,10 @@ namespace ShortCommands
                     {
                         usecmd = usecmd.Replace(replacer2, string.Join(" ", param.Select(p => p)));
                     }
-
-                    Commands.HandleCommand(args.Player, "/" + usecmd);
+                    Commands.HandleCommand(args.Player, string.Format("{0}{1}", args.CommandPrefix, usecmd));
                     args.Handled = true;
                 }
-            }
+            //}
         }
 
         private void Reload(CommandArgs args)
