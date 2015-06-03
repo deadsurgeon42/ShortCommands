@@ -14,7 +14,7 @@ namespace ShortCommands
         public override string Name { get { return "ShortCommands"; } }
         public override string Author { get { return "Zaicon"; } }
         public override string Description { get { return "Enables live Shortcommands."; } }
-        public override Version Version { get { return new Version(1, 2, 0, 0); } }
+        public override Version Version { get { return new Version(1, 2, 0, 1); } }
 
         private static Config config = new Config();
         public string configPath = Path.Combine(TShock.SavePath, "ShortCommands.json");
@@ -22,7 +22,7 @@ namespace ShortCommands
         public Shorten(Main game)
             : base(game)
         {
-            base.Order = 1;
+            base.Order = 5;
         }
 
         public override void Initialize()
@@ -50,58 +50,53 @@ namespace ShortCommands
 
         private void OnChat(TShockAPI.Hooks.PlayerCommandEventArgs args)
         {
-            /*
-            bool exists = false;
-
-            for (int i = 0; i < Commands.TShockCommands.Count; i++)
+            //If the used command is an existing command, ignore.
+            if (Commands.TShockCommands.Count(p => p.Name == args.CommandName) > 0 || Commands.ChatCommands.Count(p => p.Name == args.CommandName) > 0)
             {
-                if (Commands.TShockCommands[i].Names.Contains(args.CommandName))
-                {
-                    exists = true;
-                    return;
-                }
+                return;
             }
 
-            for (int i = 0; i < Commands.ChatCommands.Count; i++)
+            //Check if our config has the typed command
+            if (config.shortcommands.ContainsKey(args.CommandName))
             {
-                if (Commands.ChatCommands[i].Names.Contains(args.CommandName))
-                {
-                    exists = true;
-                    return;
-                }
-            }
+                KeyValuePair<string, string> shortcmd = new KeyValuePair<string, string>();
 
-            if (!exists)
-            {*/
-                if (config.shortcommands.ContainsKey(args.CommandName))
+                //Retrieve the long commands by finding the short command.
+                foreach (KeyValuePair<string, string> thecommand in config.shortcommands)
                 {
-                    KeyValuePair<string, string> shortcmd = new KeyValuePair<string,string>();
-                    foreach (KeyValuePair<string, string> thecommand in config.shortcommands)
+                    if (args.CommandName == thecommand.Key)
                     {
-                        if (args.CommandName == thecommand.Key)
-                        {
-                            shortcmd = thecommand;
-                        }
+                        shortcmd = thecommand;
                     }
+                }
 
-                    string usecmd = shortcmd.Value;
-                    string usecmdname = usecmd.Split(' ')[0];
+                //Split the long commands into the different commands
+                List<string> usecmds = shortcmd.Value.Split(';').ToList();
+                List<string> usecmdnames = new List<string>();
 
+                //Make a separate list of the actual command names
+                foreach (string cmd in usecmds)
+                {
+                    usecmdnames.Add(cmd.Split(' ')[0]);
+                }
+
+                //Loop through each bound command
+                for (int j = 0; j < usecmds.Count; j++)
+                {
+                    //Temporarily store the individual command & name
+                    string usecmd = usecmds[j];
+                    string usecmdname = usecmdnames[j];
+
+                    //Check if the command is real or not (no shortcommands!)
                     if (Commands.TShockCommands.Count(p => p.Name == usecmdname) == 0 && Commands.ChatCommands.Count(p => p.Name == usecmdname) == 0)
                     {
                         args.Player.SendErrorMessage("Unknown command: {0}", usecmdname);
+                        TShock.Log.Warn("Unknown ShortCommand entry: {0}", usecmdname);
                         args.Handled = true;
                         return;
                     }
-
-                    if (args.CommandName == usecmdname)
-                    {
-                        args.Player.SendErrorMessage("An error occured. Check the logs for more details.");
-                        TShock.Log.Error("\"{0}\" cannot be a shortcommand for \"{0}\"!", usecmdname);
-                        args.Handled = true;
-                        return;
-                    }
-
+                    
+                    //Handle replacing params with {0} and {+}
                     List<string> param = args.Parameters;
                     int replaced = 0;
 
@@ -128,16 +123,20 @@ namespace ShortCommands
                     {
                         usecmd = usecmd.Replace(replacer2, string.Join(" ", param.Select(p => p)));
                     }
-                    Commands.HandleCommand(args.Player, string.Format("{0}{1}", args.CommandPrefix, usecmd));
-                    args.Handled = true;
-                }
-            //}
-        }
 
+                    //Handle the Command.
+                    Commands.HandleCommand(args.Player, string.Format("{0}{1}", args.CommandPrefix, usecmd));
+                } //Loop back through the rest of the bound commands
+
+                //Don't let TShock handle it (it would give "Invalid Command" after already running the commands.
+                args.Handled = true;
+            }
+        }
+        
         private void Reload(CommandArgs args)
         {
             loadConfig();
-            args.Player.SendSuccessMessage("Config reloaded!");
+            args.Player.SendSuccessMessage("Shortcommand config reloaded!");
         }
 
         private void loadConfig()
