@@ -14,7 +14,7 @@ namespace ShortCommands
         public override string Name { get { return "ShortCommands"; } }
         public override string Author { get { return "Zaicon"; } }
         public override string Description { get { return "Enables live Shortcommands."; } }
-        public override Version Version { get { return new Version(1, 2, 0, 1); } }
+        public override Version Version { get { return new Version(1, 2, 0, 2); } }
 
         private static Config config = new Config();
         public string configPath = Path.Combine(TShock.SavePath, "ShortCommands.json");
@@ -97,9 +97,15 @@ namespace ShortCommands
                     }
                     
                     //Handle replacing params with {0} and {+}
-                    List<string> param = args.Parameters;
-                    int replaced = 0;
+                    List<string> param = new List<string>();
 
+                    for (int i = 0; i < args.Parameters.Count; i++)
+                    {
+                        param.Add(args.Parameters[i]);
+                    }
+
+                    int replaced = 0;
+                    
                     for (int i = 0; i < 10; i++)
                     {
                         string replacer = "{" + i.ToString() + "}";
