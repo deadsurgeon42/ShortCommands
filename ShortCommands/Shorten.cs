@@ -16,7 +16,7 @@ namespace ShortCommands
         public override string Description { get { return "Enables live Shortcommands."; } }
         public override Version Version { get { return new Version(1, 2, 0, 2); } }
 
-        private static Config config = new Config();
+        public static Config config = new Config();
         public string configPath = Path.Combine(TShock.SavePath, "ShortCommands.json");
 
         public Shorten(Main game)
@@ -128,6 +128,18 @@ namespace ShortCommands
                     if (usecmd.Contains(replacer2) && param.Count > 0)
                     {
                         usecmd = usecmd.Replace(replacer2, string.Join(" ", param.Select(p => p)));
+                    }
+
+                    string replacer3 = "{player}";
+                    if (usecmd.Contains(replacer3))
+                    {
+                        usecmd = usecmd.Replace(replacer3, args.Player.UserAccountName);
+                    }
+
+                    string replacer4 = "{website}";
+                    if (usecmd.Contains(replacer4))
+                    {
+                        usecmd = usecmd.Replace(replacer4, config.website);
                     }
 
                     //Handle the Command.
