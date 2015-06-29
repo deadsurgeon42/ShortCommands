@@ -14,7 +14,7 @@ namespace ShortCommands
         public override string Name { get { return "ShortCommands"; } }
         public override string Author { get { return "Zaicon"; } }
         public override string Description { get { return "Enables live Shortcommands."; } }
-        public override Version Version { get { return new Version(1, 2, 0, 2); } }
+        public override Version Version { get { return new Version(1, 2, 1, 0); } }
 
         public static Config config = new Config();
         public string configPath = Path.Combine(TShock.SavePath, "ShortCommands.json");
@@ -133,7 +133,7 @@ namespace ShortCommands
                     string replacer3 = "{player}";
                     if (usecmd.Contains(replacer3))
                     {
-                        usecmd = usecmd.Replace(replacer3, args.Player.UserAccountName);
+                        usecmd = usecmd.Replace(replacer3, args.Player.User.Name);
                     }
 
                     string replacer4 = "{website}";
