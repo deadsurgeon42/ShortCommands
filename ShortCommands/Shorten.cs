@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
 
 namespace ShortCommands
 {
-    [ApiVersion(1,24)]
+    [ApiVersion(1,23)]
     public class Shorten : TerrariaPlugin
     {
         public override string Name { get { return "ShortCommands"; } }
         public override string Author { get { return "Zaicon"; } }
         public override string Description { get { return "Enables live Shortcommands."; } }
-        public override Version Version { get { return Assembly.GetExecutingAssembly().GetName().Version; } }
+        public override Version Version { get { return new Version(1, 2, 6, 0); } }
 
         public static Config config = new Config();
         public string configPath = Path.Combine(TShock.SavePath, "ShortCommands.json");
