@@ -9,7 +9,7 @@ using TShockAPI;
 
 namespace ShortCommands
 {
-    [ApiVersion(1,26)]
+    [ApiVersion(2,0)]
     public class Shorten : TerrariaPlugin
     {
         public override string Name { get { return "ShortCommands"; } }
@@ -44,7 +44,7 @@ namespace ShortCommands
 
         private void OnInitialize(EventArgs args)
         {
-            loadConfig();
+            LoadConfig();
 
             Commands.ChatCommands.Add(new Command("shortcmd.reload", Reload, "screload"));
         }
@@ -154,11 +154,11 @@ namespace ShortCommands
         
         private void Reload(CommandArgs args)
         {
-            loadConfig();
+            LoadConfig();
             args.Player.SendSuccessMessage("Shortcommand config reloaded!");
         }
 
-        private void loadConfig()
+        private void LoadConfig()
         {
             (config = Config.Read(configPath)).Write(configPath);
         }
