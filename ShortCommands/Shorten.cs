@@ -9,7 +9,7 @@ using TShockAPI;
 
 namespace ShortCommands
 {
-    [ApiVersion(2,0)]
+    [ApiVersion(2,1)]
     public class Shorten : TerrariaPlugin
     {
         public override string Name { get { return "ShortCommands"; } }
